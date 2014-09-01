@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>One Octave</title>
+	<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/q.js/1.0.1/q.min.js"></script>
+	<style type="text/css">
+		.circle {
+			border-radius: 50%;
+			border-width: 10px;
+			border-style: solid;
+			border-color: black;
+			width: 100px;
+			height: 100px; 
+		}
+
+		.button{
+			margin-right: 2%;
+			display: inline-block;
+		}
+
+		.button-row{
+			margin-top: 200px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row"></div>
+</div>
+		<div class="button-row">
+			<div class="circle button" style="background-color: #D93046;" onmousedown="play(C4);" onmouseup="stop(C4);"></div>
+			<div class="circle button" style="background-color: #4ECDC4;" onmousedown="play(D4);" onmouseup="stop(D4);"></div>
+			<div class="circle button" style="background-color: #FFFF00;" onmousedown="play(E4);" onmouseup="stop(E4);"></div>
+			<div class="circle button" style="background-color: #F78543;" onmousedown="play(F4);" onmouseup="stop(F4);"></div>
+			<div class="circle button" style="background-color: #3FA689;" onmousedown="play(G4);" onmouseup="stop(G4);"></div>
+			<div class="circle button" style="background-color: #C4EAFD;" onmousedown="play(A4);" onmouseup="stop(A4);"></div>
+			<div class="circle button" style="background-color: #E2E002;" onmousedown="play(B4);" onmouseup="stop(B4);"></div>
+			<div class="circle button" style="background-color: #D93046;" onmousedown="play(C5);" onmouseup="stop(C5);"></div>
+		</div>
+	<script type="text/javascript">
+		var audioCtx = new (window.AudioContext || windows.webkitAudioContext)();
+		var C4 = createNote(audioCtx.createBufferSource());
+		var D4 = createNote(audioCtx.createBufferSource());
+		var E4 = createNote(audioCtx.createBufferSource());
+		var F4 = createNote(audioCtx.createBufferSource());
+		var G4 = createNote(audioCtx.createBufferSource());
+		var A4 = createNote(audioCtx.createBufferSource());
+		var B4 = createNote(audioCtx.createBufferSource());
+		var C5 = createNote(audioCtx.createBufferSource());
+
+		window.onload = init;
+
+		function init(){
+			decodeAudioData(audioCtx, 'Piano.ff.C4.mp3',function(buffer){C4.buffer = buffer;})
+			.then(decodeAudioData(audioCtx, 'Piano.ff.D4.mp3',function(buffer){D4.buffer = buffer;}))
+			.then(decodeAudioData(audioCtx, 'Piano.ff.E4.mp3',function(buffer){E4.buffer = buffer;}))
+			.then(decodeAudioData(audioCtx, 'Piano.ff.F4.mp3',function(buffer){F4.buffer = buffer;}))
+			.then(decodeAudioData(audioCtx, 'Piano.ff.G4.mp3',function(buffer){G4.buffer = buffer;}))
+			.then(decodeAudioData(audioCtx, 'Piano.ff.A4.mp3',function(buffer){A4.buffer = buffer;}))
+			.then(decodeAudioData(audioCtx, 'Piano.ff.B4.mp3',function(buffer){B4.buffer = buffer;}))
+			.then(decodeAudioData(audioCtx, 'Piano.ff.C5.mp3',function(buffer){C5.buffer = buffer;}));
+		}
+
+		function play(note){
+				note.source = audioCtx.createBufferSource();
+				note.source.buffer = note.buffer;
+				note.source.connect(audioCtx.destination);
+				note.source.start(0);
+			}
+
+		function stop(note){
+				note.source.stop(0);
+			}
+
+		function createNote(source){
+			return {buffer: null,
+				source: source};
+		}
+
+		function decodeAudioData(context, sound, success, failure){
+			var deferred = Q.defer(),
+			request = new XMLHttpRequest();
+
+			request.open('GET', sound, true);
+			request.responseType='arraybuffer';
+
+			request.onload = function(){
+				var audioData = request.response;
+				context.decodeAudioData(audioData, function(buffer){
+					if (success){
+						success(buffer);
+					}
+					deferred.resolve(buffer);
+				},
+				function(e){
+					if (failure){
+						failure(e);
+					}
+					deferred.reject("Error with decoding audio data: " + e.err);
+				});
+			}
+
+			request.send();
+
+			return deferred.promise;
+		}
+	</script>
+</body>
+</html>
