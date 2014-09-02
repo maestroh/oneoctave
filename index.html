@@ -30,7 +30,7 @@
 	<div class="row"></div>
 </div>
 		<div class="button-row">
-			<div class="circle button" style="background-color: #D93046;" onmousedown="play(C4);" onmouseup="stop(C4);"></div>
+			<div class="circle button" style="background-color: #D93046;" onmousedown="playC4();" onmouseup="stop(C4);"></div>
 			<div class="circle button" style="background-color: #4ECDC4;" onmousedown="play(D4);" onmouseup="stop(D4);"></div>
 			<div class="circle button" style="background-color: #FFFF00;" onmousedown="play(E4);" onmouseup="stop(E4);"></div>
 			<div class="circle button" style="background-color: #F78543;" onmousedown="play(F4);" onmouseup="stop(F4);"></div>
@@ -61,6 +61,10 @@
 			.then(decodeAudioData(audioCtx, 'Piano.ff.A4.mp3',function(buffer){A4.buffer = buffer;}))
 			.then(decodeAudioData(audioCtx, 'Piano.ff.B4.mp3',function(buffer){B4.buffer = buffer;}))
 			.then(decodeAudioData(audioCtx, 'Piano.ff.C5.mp3',function(buffer){C5.buffer = buffer;}));
+		}
+		
+		function playC4(){
+			play(C4);
 		}
 
 		function play(note){
