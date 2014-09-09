@@ -77,6 +77,10 @@
 			.then(decodeAudioData(audioCtx, 'Piano.ff.B4.mp3',function(buffer){B4.buffer = buffer;}))
 			.then(decodeAudioData(audioCtx, 'Piano.ff.C5.mp3',function(buffer){C5.buffer = buffer;}));
 		}
+		
+		function playC4(){
+			play(C4);
+		}
 
 		function play(note){
 				note.source = audioCtx.createBufferSource();
