@@ -2,8 +2,8 @@
 <html>
 <head>
 	<title>One Octave</title>
-	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/q.js/1.0.1/q.min.js"></script>
+	<script src="/bower_components/mousetrap/mousetrap.min.js"></script>
 	<style type="text/css">
 		.circle {
 			border-radius: 50%;
@@ -26,19 +26,16 @@
 	</style>
 </head>
 <body>
-<div class="container-fluid">
-	<div class="row"></div>
-</div>
-		<div class="button-row">
-			<div class="circle button" style="background-color: #D93046;" onmousedown="play(C4);" onmouseup="stop(C4);"></div>
-			<div class="circle button" style="background-color: #4ECDC4;" onmousedown="play(D4);" onmouseup="stop(D4);"></div>
-			<div class="circle button" style="background-color: #FFFF00;" onmousedown="play(E4);" onmouseup="stop(E4);"></div>
-			<div class="circle button" style="background-color: #F78543;" onmousedown="play(F4);" onmouseup="stop(F4);"></div>
-			<div class="circle button" style="background-color: #3FA689;" onmousedown="play(G4);" onmouseup="stop(G4);"></div>
-			<div class="circle button" style="background-color: #C4EAFD;" onmousedown="play(A4);" onmouseup="stop(A4);"></div>
-			<div class="circle button" style="background-color: #E2E002;" onmousedown="play(B4);" onmouseup="stop(B4);"></div>
-			<div class="circle button" style="background-color: #D93046;" onmousedown="play(C5);" onmouseup="stop(C5);"></div>
-		</div>
+	<div class="button-row">
+		<div class="circle button" style="background-color: #D93046;" onmousedown="play(C4);" onmouseup="stop(C4);"></div>
+		<div class="circle button" style="background-color: #4ECDC4;" onmousedown="play(D4);" onmouseup="stop(D4);"></div>
+		<div class="circle button" style="background-color: #FFFF00;" onmousedown="play(E4);" onmouseup="stop(E4);"></div>
+		<div class="circle button" style="background-color: #F78543;" onmousedown="play(F4);" onmouseup="stop(F4);"></div>
+		<div class="circle button" style="background-color: #3FA689;" onmousedown="play(G4);" onmouseup="stop(G4);"></div>
+		<div class="circle button" style="background-color: #C4EAFD;" onmousedown="play(A4);" onmouseup="stop(A4);"></div>
+		<div class="circle button" style="background-color: #E2E002;" onmousedown="play(B4);" onmouseup="stop(B4);"></div>
+		<div class="circle button" style="background-color: #D93046;" onmousedown="play(C5);" onmouseup="stop(C5);"></div>
+	</div>
 	<script type="text/javascript">
 		var audioCtx = new (window.AudioContext || windows.webkitAudioContext)();
 		var C4 = createNote(audioCtx.createBufferSource());
@@ -51,8 +48,26 @@
 		var C5 = createNote(audioCtx.createBufferSource());
 
 		window.onload = init;
+		var downKeys = [];
 
 		function init(){
+			Mousetrap.bind('a', function() { onKeyDown('a', C4); });
+			Mousetrap.bind('s', function() { onKeyDown('s', D4); });
+			Mousetrap.bind('d', function() { onKeyDown('d', E4); });
+			Mousetrap.bind('f', function() { onKeyDown('f', F4); });
+			Mousetrap.bind('j', function() { onKeyDown('j', G4); });
+			Mousetrap.bind('k', function() { onKeyDown('k', A4); });
+			Mousetrap.bind('l', function() { onKeyDown('l', B4); });
+			Mousetrap.bind(';', function() { onKeyDown(';', C5); });
+			Mousetrap.bind('a', function() { onKeyUp('a', C4); }, 'keyup');
+			Mousetrap.bind('s', function() { onKeyUp('s', D4); }, 'keyup');
+			Mousetrap.bind('d', function() { onKeyUp('d', E4); }, 'keyup');
+			Mousetrap.bind('f', function() { onKeyUp('f', F4); }, 'keyup');
+			Mousetrap.bind('j', function() { onKeyUp('j', G4); }, 'keyup');
+			Mousetrap.bind('k', function() { onKeyUp('k', A4); }, 'keyup');
+			Mousetrap.bind('l', function() { onKeyUp('l', B4); }, 'keyup');
+			Mousetrap.bind(';', function() { onKeyUp(';', C5); }, 'keyup');
+
 			decodeAudioData(audioCtx, 'Piano.ff.C4.mp3',function(buffer){C4.buffer = buffer;})
 			.then(decodeAudioData(audioCtx, 'Piano.ff.D4.mp3',function(buffer){D4.buffer = buffer;}))
 			.then(decodeAudioData(audioCtx, 'Piano.ff.E4.mp3',function(buffer){E4.buffer = buffer;}))
@@ -77,6 +92,21 @@
 		function createNote(source){
 			return {buffer: null,
 				source: source};
+		}
+
+		function onKeyDown(key, note){
+			if (downKeys.indexOf(key) == -1){
+				downKeys.push(key);
+				play(note);
+			}
+		}
+
+		function onKeyUp(key, note){
+			var index = downKeys.indexOf(key);
+			if (index != -1){
+				downKeys.splice(index, 1);
+				stop(note);
+			}
 		}
 
 		function decodeAudioData(context, sound, success, failure){
