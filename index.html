@@ -27,14 +27,14 @@
 </head>
 <body>
 	<div class="button-row">
-		<div class="circle button" style="background-color: #D93046;" onmousedown="play(C4);" onmouseup="stop(C4);"></div>
-		<div class="circle button" style="background-color: #4ECDC4;" onmousedown="play(D4);" onmouseup="stop(D4);"></div>
-		<div class="circle button" style="background-color: #FFFF00;" onmousedown="play(E4);" onmouseup="stop(E4);"></div>
-		<div class="circle button" style="background-color: #F78543;" onmousedown="play(F4);" onmouseup="stop(F4);"></div>
-		<div class="circle button" style="background-color: #3FA689;" onmousedown="play(G4);" onmouseup="stop(G4);"></div>
-		<div class="circle button" style="background-color: #C4EAFD;" onmousedown="play(A4);" onmouseup="stop(A4);"></div>
-		<div class="circle button" style="background-color: #E2E002;" onmousedown="play(B4);" onmouseup="stop(B4);"></div>
-		<div class="circle button" style="background-color: #D93046;" onmousedown="play(C5);" onmouseup="stop(C5);"></div>
+		<div id="C4" class="circle button" style="background-color: #D93046;"></div>
+		<div id="D4" class="circle button" style="background-color: #4ECDC4;"></div>
+		<div id="E4" class="circle button" style="background-color: #FFFF00;"></div>
+		<div id="F4" class="circle button" style="background-color: #F78543;"></div>
+		<div id="G4" class="circle button" style="background-color: #3FA689;"></div>
+		<div id="A4" class="circle button" style="background-color: #C4EAFD;"></div>
+		<div id="B4" class="circle button" style="background-color: #E2E002;"></div>
+		<div id="C5" class="circle button" style="background-color: #D93046;"></div>
 	</div>
 	<script type="text/javascript">
 		var audioCtx = new (window.AudioContext || windows.webkitAudioContext)();
@@ -51,31 +51,9 @@
 		var downKeys = [];
 
 		function init(){
-			Mousetrap.bind('a', function() { onKeyDown('a', C4); });
-			Mousetrap.bind('s', function() { onKeyDown('s', D4); });
-			Mousetrap.bind('d', function() { onKeyDown('d', E4); });
-			Mousetrap.bind('f', function() { onKeyDown('f', F4); });
-			Mousetrap.bind('j', function() { onKeyDown('j', G4); });
-			Mousetrap.bind('k', function() { onKeyDown('k', A4); });
-			Mousetrap.bind('l', function() { onKeyDown('l', B4); });
-			Mousetrap.bind(';', function() { onKeyDown(';', C5); });
-			Mousetrap.bind('a', function() { onKeyUp('a', C4); }, 'keyup');
-			Mousetrap.bind('s', function() { onKeyUp('s', D4); }, 'keyup');
-			Mousetrap.bind('d', function() { onKeyUp('d', E4); }, 'keyup');
-			Mousetrap.bind('f', function() { onKeyUp('f', F4); }, 'keyup');
-			Mousetrap.bind('j', function() { onKeyUp('j', G4); }, 'keyup');
-			Mousetrap.bind('k', function() { onKeyUp('k', A4); }, 'keyup');
-			Mousetrap.bind('l', function() { onKeyUp('l', B4); }, 'keyup');
-			Mousetrap.bind(';', function() { onKeyUp(';', C5); }, 'keyup');
-
-			decodeAudioData(audioCtx, 'Piano.ff.C4.mp3',function(buffer){C4.buffer = buffer;})
-			.then(decodeAudioData(audioCtx, 'Piano.ff.D4.mp3',function(buffer){D4.buffer = buffer;}))
-			.then(decodeAudioData(audioCtx, 'Piano.ff.E4.mp3',function(buffer){E4.buffer = buffer;}))
-			.then(decodeAudioData(audioCtx, 'Piano.ff.F4.mp3',function(buffer){F4.buffer = buffer;}))
-			.then(decodeAudioData(audioCtx, 'Piano.ff.G4.mp3',function(buffer){G4.buffer = buffer;}))
-			.then(decodeAudioData(audioCtx, 'Piano.ff.A4.mp3',function(buffer){A4.buffer = buffer;}))
-			.then(decodeAudioData(audioCtx, 'Piano.ff.B4.mp3',function(buffer){B4.buffer = buffer;}))
-			.then(decodeAudioData(audioCtx, 'Piano.ff.C5.mp3',function(buffer){C5.buffer = buffer;}));
+			keyBindings();
+			registerEvents();
+			getAudio();
 		}
 
 		function play(note){
@@ -107,6 +85,86 @@
 				downKeys.splice(index, 1);
 				stop(note);
 			}
+		}
+
+		function keyBindings(){
+			Mousetrap.bind('a', function() { onKeyDown('a', C4); });
+			Mousetrap.bind('s', function() { onKeyDown('s', D4); });
+			Mousetrap.bind('d', function() { onKeyDown('d', E4); });
+			Mousetrap.bind('f', function() { onKeyDown('f', F4); });
+			Mousetrap.bind('j', function() { onKeyDown('j', G4); });
+			Mousetrap.bind('k', function() { onKeyDown('k', A4); });
+			Mousetrap.bind('l', function() { onKeyDown('l', B4); });
+			Mousetrap.bind(';', function() { onKeyDown(';', C5); });
+			Mousetrap.bind('a', function() { onKeyUp('a', C4); }, 'keyup');
+			Mousetrap.bind('s', function() { onKeyUp('s', D4); }, 'keyup');
+			Mousetrap.bind('d', function() { onKeyUp('d', E4); }, 'keyup');
+			Mousetrap.bind('f', function() { onKeyUp('f', F4); }, 'keyup');
+			Mousetrap.bind('j', function() { onKeyUp('j', G4); }, 'keyup');
+			Mousetrap.bind('k', function() { onKeyUp('k', A4); }, 'keyup');
+			Mousetrap.bind('l', function() { onKeyUp('l', B4); }, 'keyup');
+			Mousetrap.bind(';', function() { onKeyUp(';', C5); }, 'keyup');
+		}
+
+		function registerEvents(){
+			var elementC4 = document.getElementById('C4');
+			elementC4.addEventListener('touchstart', function(){ play(C4);});
+			elementC4.addEventListener('mousedown', function(){ play(C4);});
+			elementC4.addEventListener('touchend', function(){ stop(C4);});
+			elementC4.addEventListener('mouseup', function(){ stop(C4);});
+
+			var elementD4 = document.getElementById("D4");
+			elementD4.addEventListener('touchstart', function(){ play(D4);});
+			elementD4.addEventListener('mousedown', function(){ play(D4);});
+			elementD4.addEventListener('touchend', function(){ stop(D4);});
+			elementD4.addEventListener('mouseup', function(){ stop(D4);});
+
+			var elementE4 = document.getElementById("E4");
+			elementE4.addEventListener('touchstart', function(){ play(E4);});
+			elementE4.addEventListener('mousedown', function(){ play(E4);});
+			elementE4.addEventListener('touchend', function(){ stop(E4);});
+			elementE4.addEventListener('mouseup', function(){ stop(E4);});
+
+			var elementF4 = document.getElementById("F4");
+			elementF4.addEventListener('touchstart', function(){ play(F4);});
+			elementF4.addEventListener('mousedown', function(){ play(F4);});
+			elementF4.addEventListener('touchend', function(){ stop(F4);});
+			elementF4.addEventListener('mouseup', function(){ stop(F4);});
+
+			var elementG4 = document.getElementById("G4");
+			elementG4.addEventListener('touchstart', function(){ play(G4);});
+			elementG4.addEventListener('mousedown', function(){ play(G4);});
+			elementG4.addEventListener('touchend', function(){ stop(G4);});
+			elementG4.addEventListener('mouseup', function(){ stop(G4);});
+			
+			var elementA4 = document.getElementById("A4");
+			elementA4.addEventListener('touchstart', function(){ play(A4);});
+			elementA4.addEventListener('mousedown', function(){ play(A4);});
+			elementA4.addEventListener('touchend', function(){ stop(A4);});
+			elementA4.addEventListener('mouseup', function(){ stop(A4);});
+
+			var elementB4 = document.getElementById("B4");
+			elementB4.addEventListener('touchstart', function(){ play(B4);});
+			elementB4.addEventListener('mousedown', function(){ play(B4);});
+			elementB4.addEventListener('touchend', function(){ stop(B4);});
+			elementB4.addEventListener('mouseup', function(){ stop(B4);});
+
+			var elementC5 = document.getElementById("C5");
+			elementC5.addEventListener('touchstart', function(){ play(C5);});
+			elementC5.addEventListener('mousedown', function(){ play(C5);});
+			elementC5.addEventListener('touchend', function(){ stop(C5);});
+			elementC5.addEventListener('mouseup', function(){ stop(C5);});
+		}
+
+		function getAudio(){
+			decodeAudioData(audioCtx, 'Piano.ff.C4.mp3',function(buffer){C4.buffer = buffer;})
+			.then(decodeAudioData(audioCtx, 'Piano.ff.D4.mp3',function(buffer){D4.buffer = buffer;}))
+			.then(decodeAudioData(audioCtx, 'Piano.ff.E4.mp3',function(buffer){E4.buffer = buffer;}))
+			.then(decodeAudioData(audioCtx, 'Piano.ff.F4.mp3',function(buffer){F4.buffer = buffer;}))
+			.then(decodeAudioData(audioCtx, 'Piano.ff.G4.mp3',function(buffer){G4.buffer = buffer;}))
+			.then(decodeAudioData(audioCtx, 'Piano.ff.A4.mp3',function(buffer){A4.buffer = buffer;}))
+			.then(decodeAudioData(audioCtx, 'Piano.ff.B4.mp3',function(buffer){B4.buffer = buffer;}))
+			.then(decodeAudioData(audioCtx, 'Piano.ff.C5.mp3',function(buffer){C5.buffer = buffer;}));
 		}
 
 		function decodeAudioData(context, sound, success, failure){
