@@ -4,6 +4,7 @@
 	<title>One Octave</title>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/q.js/1.0.1/q.min.js"></script>
 	<script src="bower_components/mousetrap/mousetrap.min.js"></script>
+	<script src="oneoctave.js"></script>
 	<style type="text/css">
 		.circle {
 			border-radius: 50%;
@@ -38,161 +39,26 @@
 	</div>
 	<script type="text/javascript">
 		var audioCtx = new (window.AudioContext || windows.webkitAudioContext)();
-		var C4 = createNote(audioCtx.createBufferSource());
-		var D4 = createNote(audioCtx.createBufferSource());
-		var E4 = createNote(audioCtx.createBufferSource());
-		var F4 = createNote(audioCtx.createBufferSource());
-		var G4 = createNote(audioCtx.createBufferSource());
-		var A4 = createNote(audioCtx.createBufferSource());
-		var B4 = createNote(audioCtx.createBufferSource());
-		var C5 = createNote(audioCtx.createBufferSource());
+		var C4 = createNote(audioCtx, 'Piano.ff.C4.mp3', document.getElementById('C4'), 'a');
+		var D4 = createNote(audioCtx, 'Piano.ff.D4.mp3', document.getElementById('D4'), 's');
+		var E4 = createNote(audioCtx, 'Piano.ff.E4.mp3', document.getElementById('E4'), 'd');
+		var F4 = createNote(audioCtx, 'Piano.ff.F4.mp3', document.getElementById('F4'), 'f');
+		var G4 = createNote(audioCtx, 'Piano.ff.G4.mp3', document.getElementById('G4'), 'j');
+		var A4 = createNote(audioCtx, 'Piano.ff.A4.mp3', document.getElementById('A4'), 'k');
+		var B4 = createNote(audioCtx, 'Piano.ff.B4.mp3', document.getElementById('B4'), 'l');
+		var C5 = createNote(audioCtx, 'Piano.ff.C5.mp3', document.getElementById('C5'), ';');
 
 		window.onload = init;
-		var downKeys = [];
 
 		function init(){
-			keyBindings();
-			registerEvents();
-			getAudio();
-		}
-
-		function play(note){
-				note.source = audioCtx.createBufferSource();
-				note.source.buffer = note.buffer;
-				note.source.connect(audioCtx.destination);
-				note.source.start(0);
-			}
-
-		function stop(note){
-				note.source.stop(0);
-			}
-
-		function createNote(source){
-			return {buffer: null,
-				source: source};
-		}
-
-		function onKeyDown(key, note){
-			if (downKeys.indexOf(key) == -1){
-				downKeys.push(key);
-				play(note);
-			}
-		}
-
-		function onKeyUp(key, note){
-			var index = downKeys.indexOf(key);
-			if (index != -1){
-				downKeys.splice(index, 1);
-				stop(note);
-			}
-		}
-
-		function keyBindings(){
-			Mousetrap.bind('a', function() { onKeyDown('a', C4); });
-			Mousetrap.bind('s', function() { onKeyDown('s', D4); });
-			Mousetrap.bind('d', function() { onKeyDown('d', E4); });
-			Mousetrap.bind('f', function() { onKeyDown('f', F4); });
-			Mousetrap.bind('j', function() { onKeyDown('j', G4); });
-			Mousetrap.bind('k', function() { onKeyDown('k', A4); });
-			Mousetrap.bind('l', function() { onKeyDown('l', B4); });
-			Mousetrap.bind(';', function() { onKeyDown(';', C5); });
-			Mousetrap.bind('a', function() { onKeyUp('a', C4); }, 'keyup');
-			Mousetrap.bind('s', function() { onKeyUp('s', D4); }, 'keyup');
-			Mousetrap.bind('d', function() { onKeyUp('d', E4); }, 'keyup');
-			Mousetrap.bind('f', function() { onKeyUp('f', F4); }, 'keyup');
-			Mousetrap.bind('j', function() { onKeyUp('j', G4); }, 'keyup');
-			Mousetrap.bind('k', function() { onKeyUp('k', A4); }, 'keyup');
-			Mousetrap.bind('l', function() { onKeyUp('l', B4); }, 'keyup');
-			Mousetrap.bind(';', function() { onKeyUp(';', C5); }, 'keyup');
-		}
-
-		function registerEvents(){
-			var elementC4 = document.getElementById('C4');
-			elementC4.addEventListener('touchstart', function(){ play(C4);});
-			elementC4.addEventListener('mousedown', function(){ play(C4);});
-			elementC4.addEventListener('touchend', function(){ stop(C4);});
-			elementC4.addEventListener('mouseup', function(){ stop(C4);});
-
-			var elementD4 = document.getElementById("D4");
-			elementD4.addEventListener('touchstart', function(){ play(D4);});
-			elementD4.addEventListener('mousedown', function(){ play(D4);});
-			elementD4.addEventListener('touchend', function(){ stop(D4);});
-			elementD4.addEventListener('mouseup', function(){ stop(D4);});
-
-			var elementE4 = document.getElementById("E4");
-			elementE4.addEventListener('touchstart', function(){ play(E4);});
-			elementE4.addEventListener('mousedown', function(){ play(E4);});
-			elementE4.addEventListener('touchend', function(){ stop(E4);});
-			elementE4.addEventListener('mouseup', function(){ stop(E4);});
-
-			var elementF4 = document.getElementById("F4");
-			elementF4.addEventListener('touchstart', function(){ play(F4);});
-			elementF4.addEventListener('mousedown', function(){ play(F4);});
-			elementF4.addEventListener('touchend', function(){ stop(F4);});
-			elementF4.addEventListener('mouseup', function(){ stop(F4);});
-
-			var elementG4 = document.getElementById("G4");
-			elementG4.addEventListener('touchstart', function(){ play(G4);});
-			elementG4.addEventListener('mousedown', function(){ play(G4);});
-			elementG4.addEventListener('touchend', function(){ stop(G4);});
-			elementG4.addEventListener('mouseup', function(){ stop(G4);});
-			
-			var elementA4 = document.getElementById("A4");
-			elementA4.addEventListener('touchstart', function(){ play(A4);});
-			elementA4.addEventListener('mousedown', function(){ play(A4);});
-			elementA4.addEventListener('touchend', function(){ stop(A4);});
-			elementA4.addEventListener('mouseup', function(){ stop(A4);});
-
-			var elementB4 = document.getElementById("B4");
-			elementB4.addEventListener('touchstart', function(){ play(B4);});
-			elementB4.addEventListener('mousedown', function(){ play(B4);});
-			elementB4.addEventListener('touchend', function(){ stop(B4);});
-			elementB4.addEventListener('mouseup', function(){ stop(B4);});
-
-			var elementC5 = document.getElementById("C5");
-			elementC5.addEventListener('touchstart', function(){ play(C5);});
-			elementC5.addEventListener('mousedown', function(){ play(C5);});
-			elementC5.addEventListener('touchend', function(){ stop(C5);});
-			elementC5.addEventListener('mouseup', function(){ stop(C5);});
-		}
-
-		function getAudio(){
-			decodeAudioData(audioCtx, 'Piano.ff.C4.mp3',function(buffer){C4.buffer = buffer;})
-			.then(decodeAudioData(audioCtx, 'Piano.ff.D4.mp3',function(buffer){D4.buffer = buffer;}))
-			.then(decodeAudioData(audioCtx, 'Piano.ff.E4.mp3',function(buffer){E4.buffer = buffer;}))
-			.then(decodeAudioData(audioCtx, 'Piano.ff.F4.mp3',function(buffer){F4.buffer = buffer;}))
-			.then(decodeAudioData(audioCtx, 'Piano.ff.G4.mp3',function(buffer){G4.buffer = buffer;}))
-			.then(decodeAudioData(audioCtx, 'Piano.ff.A4.mp3',function(buffer){A4.buffer = buffer;}))
-			.then(decodeAudioData(audioCtx, 'Piano.ff.B4.mp3',function(buffer){B4.buffer = buffer;}))
-			.then(decodeAudioData(audioCtx, 'Piano.ff.C5.mp3',function(buffer){C5.buffer = buffer;}));
-		}
-
-		function decodeAudioData(context, sound, success, failure){
-			var deferred = Q.defer(),
-			request = new XMLHttpRequest();
-
-			request.open('GET', sound, true);
-			request.responseType='arraybuffer';
-
-			request.onload = function(){
-				var audioData = request.response;
-				context.decodeAudioData(audioData, function(buffer){
-					if (success){
-						success(buffer);
-					}
-					deferred.resolve(buffer);
-				},
-				function(e){
-					if (failure){
-						failure(e);
-					}
-					deferred.reject("Error with decoding audio data: " + e.err);
-				});
-			}
-
-			request.send();
-
-			return deferred.promise;
+			C4.decodeAudioData()
+			.then(D4.decodeAudioData())
+			.then(E4.decodeAudioData())
+			.then(F4.decodeAudioData())
+			.then(G4.decodeAudioData())
+			.then(A4.decodeAudioData())
+			.then(B4.decodeAudioData())
+			.then(C5.decodeAudioData());
 		}
 	</script>
 </body>
