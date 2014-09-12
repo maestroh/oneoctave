@@ -1,18 +1,38 @@
-function createNote(audioCtx, sound, element, key){
-
-
-	var source = audioCtx.createBufferSource();
-	var buffer = null;
+function bindInput(element, key, audio){
 	var keyDown = false;
 
 	Mousetrap.bind(key, function() { onKeyDown(); });
 	Mousetrap.bind(key, function() { onKeyUp(); }, 'keyup');
 
-	element.addEventListener('touchstart', function(){ play();});
-	element.addEventListener('mousedown', function(){ play();});
-	element.addEventListener('touchend', function(){ stop();});
-	element.addEventListener('mouseup', function(){ stop();});
-	
+	element.addEventListener('touchstart', audio.play);
+	element.addEventListener('mousedown', audio.play);
+	element.addEventListener('touchend', audio.stop);
+	element.addEventListener('mouseup', audio.stop);
+
+	function onKeyDown(){
+		if (!keyDown){
+			keyDown = true;
+			audio.play();
+		}
+	}
+
+	function onKeyUp(){
+		if (keyDown){
+			keyDown = false;
+			audio.stop();
+		}
+	}
+}
+
+function createAudio(audioCtx, sound){
+	var source = audioCtx.createBufferSource();
+	var buffer = null;
+
+	return {
+		play: play,
+		stop: stop,
+		decodeAudioData: decodeAudioData
+	};
 
 	function play(){
 		source = audioCtx.createBufferSource();
@@ -23,20 +43,6 @@ function createNote(audioCtx, sound, element, key){
 
 	function stop(){
 		source.stop(0);
-	}
-
-	function onKeyDown(){
-		if (!keyDown){
-			keyDown = true;
-			play();
-		}
-	}
-
-	function onKeyUp(){
-		if (keyDown){
-			keyDown = false;
-			stop();
-		}
 	}
 
 	function decodeAudioData(){
@@ -62,7 +68,5 @@ function createNote(audioCtx, sound, element, key){
 			return deferred.promise;
 		}
 
-	return {
-		 decodeAudioData: decodeAudioData
-	};
+	
 }

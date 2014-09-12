@@ -39,18 +39,18 @@
 	</div>
 	<script type="text/javascript">
 		var audioCtx = new (window.AudioContext || windows.webkitAudioContext)();
-		var C4 = createNote(audioCtx, 'Piano.ff.C4.mp3', document.getElementById('C4'), 'a');
-		var D4 = createNote(audioCtx, 'Piano.ff.D4.mp3', document.getElementById('D4'), 's');
-		var E4 = createNote(audioCtx, 'Piano.ff.E4.mp3', document.getElementById('E4'), 'd');
-		var F4 = createNote(audioCtx, 'Piano.ff.F4.mp3', document.getElementById('F4'), 'f');
-		var G4 = createNote(audioCtx, 'Piano.ff.G4.mp3', document.getElementById('G4'), 'j');
-		var A4 = createNote(audioCtx, 'Piano.ff.A4.mp3', document.getElementById('A4'), 'k');
-		var B4 = createNote(audioCtx, 'Piano.ff.B4.mp3', document.getElementById('B4'), 'l');
-		var C5 = createNote(audioCtx, 'Piano.ff.C5.mp3', document.getElementById('C5'), ';');
-
 		window.onload = init;
 
 		function init(){
+			var C4 = createAudio(audioCtx, 'Piano.ff.C4.mp3');
+			var D4 = createAudio(audioCtx, 'Piano.ff.D4.mp3');
+			var E4 = createAudio(audioCtx, 'Piano.ff.E4.mp3');
+			var F4 = createAudio(audioCtx, 'Piano.ff.F4.mp3');
+			var G4 = createAudio(audioCtx, 'Piano.ff.G4.mp3');
+			var A4 = createAudio(audioCtx, 'Piano.ff.A4.mp3');
+			var B4 = createAudio(audioCtx, 'Piano.ff.B4.mp3');
+			var C5 = createAudio(audioCtx, 'Piano.ff.C5.mp3');
+		
 			C4.decodeAudioData()
 			.then(D4.decodeAudioData())
 			.then(E4.decodeAudioData())
@@ -59,6 +59,15 @@
 			.then(A4.decodeAudioData())
 			.then(B4.decodeAudioData())
 			.then(C5.decodeAudioData());
+
+			bindInput(document.getElementById('C4'), 'a', C4);
+			bindInput(document.getElementById('D4'), 's', D4);
+			bindInput(document.getElementById('E4'), 'd', E4);
+			bindInput(document.getElementById('F4'), 'f', F4);
+			bindInput(document.getElementById('G4'), 'j', G4);
+			bindInput(document.getElementById('A4'), 'k', A4);
+			bindInput(document.getElementById('B4'), 'l', B4);
+			bindInput(document.getElementById('C5'), ';', C5);
 		}
 	</script>
 </body>
