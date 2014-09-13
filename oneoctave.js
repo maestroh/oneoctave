@@ -1,18 +1,60 @@
-function bindInput(element, key, audio){
+function Track(){
+	var events = [];
+	var startTime;
+	var isRecording = false;
+	var isPlaying = false;
+
+	return{
+		record: record,
+		stop: stop,
+		play: play,
+		add: add
+	}
+
+	function record(){
+		startTime = new Date();
+		events = [];
+		isRecording = true;
+	}
+
+	function add(func){
+		if(isRecording){
+			events.push({func: func,delay: new Date() - startTime});
+		}
+	}
+
+	function play(){
+		for (var i = 0; i < events.length; i++) {
+			setTimeout(events[i].func, events[i].delay);
+		};
+	}
+
+	function stop(){
+		if (isRecording){
+			isRecording = false;
+		}
+	}
+}
+
+function bindAudioInput(element, key, audio, addTrackEvent){
 	var keyDown = false;
 
 	Mousetrap.bind(key, function() { onKeyDown(); });
 	Mousetrap.bind(key, function() { onKeyUp(); }, 'keyup');
 
-	element.addEventListener('touchstart', audio.play);
-	element.addEventListener('mousedown', audio.play);
-	element.addEventListener('touchend', audio.stop);
-	element.addEventListener('mouseup', audio.stop);
+	element.addEventListener('touchstart', onKeyDown);
+	element.addEventListener('mousedown', onKeyDown);
+	element.addEventListener('touchend', onKeyUp);
+	element.addEventListener('mouseup', onKeyUp);
 
 	function onKeyDown(){
 		if (!keyDown){
 			keyDown = true;
 			audio.play();
+
+			if (addTrackEvent){
+				addTrackEvent(audio.play);
+			}
 		}
 	}
 
@@ -20,6 +62,10 @@ function bindInput(element, key, audio){
 		if (keyDown){
 			keyDown = false;
 			audio.stop();
+
+			if (addTrackEvent){
+				addTrackEvent(audio.stop);
+			}
 		}
 	}
 }
