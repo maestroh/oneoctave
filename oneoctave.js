@@ -39,12 +39,15 @@ function Track(){
 	var isRecording = false;
 	var timeoutIds = [];
 
-	return{
+	var t = {
 		record: record,
 		stop: stop,
 		play: play,
-		add: add
+		add: add,
+		onFinishedPlaying: null
 	}
+
+	return t;
 
 	function record(){
 		startTime = new Date();
@@ -64,6 +67,11 @@ function Track(){
 		for (var i = 0; i < events.length; i++) {
 		 timeoutIds.push(setTimeout(events[i].func, events[i].delay));
 		};
+
+		var totalPlayTime = events[events.length - 1].delay;
+		if (t.onFinishedPlaying){
+			timeoutIds.push(setTimeout(t.onFinishedPlaying, totalPlayTime));
+		}
 	}
 
 	function stop(){
@@ -81,21 +89,43 @@ function bindControls(track){
 	stop.addEventListener('touchstart', stopTrack);
 	stop.addEventListener('mousedown', stopTrack);
 	stop.style.display = 'none';
-	document.getElementById('Record').addEventListener('touchstart', track.record);
-	document.getElementById('Record').addEventListener('mousedown', track.record);
+	var record = document.getElementById('Record');
+	record.addEventListener('touchstart', recordTrack);
+	record.addEventListener('mousedown', recordTrack);
 	
+	track.onFinishedPlaying = function(){
+		showPlay();
+	}
+
 	function playTrack(){
+		showStop();
+		stopRecording();
 		track.play();
-		play.style.display = 'none';
-		stop.style.display = 'inline-block';
 	}
 
 	function stopTrack(){
+		showPlay();
 		track.stop();
+	}
+
+	function recordTrack(){
+		track.record();
+		record.style.backgroundColor = 'red';
+	}
+
+	function showPlay(){
 		play.style.display = 'inline-block';
 		stop.style.display = 'none';
 	}
 
+	function showStop(){
+		play.style.display = 'none';
+		stop.style.display = 'inline-block';
+	}
+
+	function stopRecording(){
+		record.style.backgroundColor = '#F78543';
+	}
 }
 
 function bindAudioInput(element, key, audio, addTrackEvent){
