@@ -3,31 +3,10 @@
 <head>
 	<title>One Octave</title>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/q.js/1.0.1/q.min.js"></script>
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 	<script src="bower_components/mousetrap/mousetrap.min.js"></script>
 	<script src="oneoctave.js"></script>
-	<style type="text/css">
-		.circle {
-			border-radius: 50%;
-			border-width: 10px;
-			border-style: solid;
-			border-color: black;
-			width: 100px;
-			height: 100px; 
-		}
-
-		.button{
-			margin-right: 2%;
-			display: inline-block;
-		}
-
-		.button-row{
-			margin-top: 200px;
-		}
-
-		.center{
-			text-align: center;
-		}
-	</style>
+	<link href="oneoctave.css" rel="stylesheet">
 </head>
 <body>
 	<div class="button-row center">
@@ -40,51 +19,10 @@
 		<div id="B4" class="circle button" style="background-color: #E2E002;"></div>
 		<div id="C5" class="circle button" style="background-color: #D93046;"></div>
 	</div>
-	<div class="center">
-		<div id="Play">Play</div>
-		<div id="Stop">Stop</div>
-		<div id="Record">Record</div>
+	<div class="button-row center">
+		<div id="Play" class="controls glyphicon glyphicon-play"></div>
+		<div id="Stop" class="controls glyphicon glyphicon-stop"></div>
+		<div id="Record" class="controls record"></div>
 	</div>
-	<script type="text/javascript">
-		var audioCtx = new (window.AudioContext || windows.webkitAudioContext)();
-		window.onload = init;
-
-		function init(){
-			var C4 = createAudio(audioCtx, 'Piano.ff.C4.mp3');
-			var D4 = createAudio(audioCtx, 'Piano.ff.D4.mp3');
-			var E4 = createAudio(audioCtx, 'Piano.ff.E4.mp3');
-			var F4 = createAudio(audioCtx, 'Piano.ff.F4.mp3');
-			var G4 = createAudio(audioCtx, 'Piano.ff.G4.mp3');
-			var A4 = createAudio(audioCtx, 'Piano.ff.A4.mp3');
-			var B4 = createAudio(audioCtx, 'Piano.ff.B4.mp3');
-			var C5 = createAudio(audioCtx, 'Piano.ff.C5.mp3');
-
-			C4.decodeAudioData()
-			.then(D4.decodeAudioData())
-			.then(E4.decodeAudioData())
-			.then(F4.decodeAudioData())
-			.then(G4.decodeAudioData())
-			.then(A4.decodeAudioData())
-			.then(B4.decodeAudioData())
-			.then(C5.decodeAudioData());
-
-			var track = Track();
-			document.getElementById('Play').addEventListener('touchstart', track.play);
-			document.getElementById('Play').addEventListener('mousedown', track.play);
-			document.getElementById('Stop').addEventListener('touchstart', track.stop);
-			document.getElementById('Stop').addEventListener('mousedown', track.stop);
-			document.getElementById('Record').addEventListener('touchstart', track.record);
-			document.getElementById('Record').addEventListener('mousedown', track.record);
-
-			bindAudioInput(document.getElementById('C4'), 'a', C4, track.add);
-			bindAudioInput(document.getElementById('D4'), 's', D4, track.add);
-			bindAudioInput(document.getElementById('E4'), 'd', E4, track.add);
-			bindAudioInput(document.getElementById('F4'), 'f', F4, track.add);
-			bindAudioInput(document.getElementById('G4'), 'j', G4, track.add);
-			bindAudioInput(document.getElementById('A4'), 'k', A4, track.add);
-			bindAudioInput(document.getElementById('B4'), 'l', B4, track.add);
-			bindAudioInput(document.getElementById('C5'), ';', C5, track.add);
-		}
-	</script>
 </body>
 </html>

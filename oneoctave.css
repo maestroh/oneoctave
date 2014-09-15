@@ -1,0 +1,37 @@
+.circle {
+	border-radius: 50%;
+	border-width: 10px;
+	border-style: solid;
+	border-color: black;
+	width: 100px;
+	height: 100px; 
+}
+
+.button{
+	margin-right: 2%;
+	display: inline-block;
+}
+
+.button-row{
+	margin-top: 200px;
+}
+
+.center{
+	text-align: center;
+}
+
+.controls{
+	font-size: 60px;
+	display: inline-block;
+	color:#F78543;
+	margin-right: 4%;
+}
+
+.record{
+	border-radius: 50%;
+	border-width: 0px;
+	margin-left: 10px;
+	width: 52px;
+	height: 52px;
+	background-color: #F78543;
+}
